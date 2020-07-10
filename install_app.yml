@@ -1,0 +1,41 @@
+---
+- name: Install Webapp with simple customisation
+  hosts: poweredOn:&services:&webserver
+  become: yes
+  tasks: 
+  
+    - name: Get service parameters
+      set_fact:
+        app: 
+          name: "{{ service_config.app.name }}"
+          quote: "{{ service_config.app.quote }}"
+          version: "{{ service_config.app.version }}"
+         
+    - name: Install Apache
+      yum: 
+        state: present
+        name: "{{ apache_version }}"
+        
+    - name: Customize Landing Page 
+      template: 
+        src: index.j2
+        dest: "{{ apache_index }}"
+  
+    - name: Open local firewall port
+      firewalld: 
+        port: 80/tcp
+        permanent: yes
+        immediate: yes
+        state: enabled
+  
+    - name: Make sure Apache is started 
+      service: 
+        name: httpd
+        state: started    
+        
+    - name: Display result
+      debug: 
+        msg: "Access the service at: http://{{ ansible_host }}"
+    
+    
+    

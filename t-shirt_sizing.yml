@@ -1,0 +1,20 @@
+---
+
+- name: Create VMware Infrastructure
+  hosts: localhost
+  connection: local
+  tasks:
+  
+    - name: Including VMware role for infrastructure creation
+      include_role:
+        name: vmware
+      vars:
+        vmw_vm_folder: "{{ hostvars[item].service_config.vm.project }}"
+        vmw_role:      "{{ hostvars[item].service_config.vm.role }}"
+        vmw_service:   "{{ hostvars[item].service_config.vm.service }}"
+        vmw_project:   "{{ hostvars[item].service_config.vm.project }}"
+        vmw_count:     "{{ hostvars[item].service_config.vm.count }}"
+        vmw_vm_size:   "{{ hostvars[item].service_config.vm.size }}"
+        vmw_vm_name:   "{{ item }}"
+      with_items: "{{ groups['services'] }}"
+

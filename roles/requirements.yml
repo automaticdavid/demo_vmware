@@ -1,0 +1,3 @@
+- src: https://github.com/automaticdavid/vmware
+  version: master
+  name: vmware
